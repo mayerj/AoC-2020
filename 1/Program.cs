@@ -210,19 +210,44 @@ namespace AoC_2020
 
             var split = Input.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToArray();
 
-            for (int i = 0; i < split.Length; i++)
+            Part1(split);
+            Part2(split);
+        }
+
+        public static void Part1(int[] input)
+        {
+            for (int i = 0; i < input.Length; i++)
             {
-                for (int j = 0; j < split.Length; j++)
+                for (int j = 0; j < input.Length; j++)
                 {
                     if (i == j) continue;
 
-                    if (split[i] + split[j] == 2020)
+                    if (input[i] + input[j] == 2020)
                     {
-                        Console.WriteLine(split[i] * split[j]);
+                        Console.WriteLine(input[i] * input[j]);
                     }
                 }
             }
 
+        }
+
+        private static void Part2(int[] input)
+        {
+            for (int i = 0; i < input.Length; i++)
+            {
+                for (int j = 0; j < input.Length; j++)
+                {
+                    for (int k = 0; k < input.Length; k++)
+                    {
+                        if (i == j || j == k || i == k) continue;
+
+                        if (input[i] + input[j] + input[k] == 2020)
+                        {
+                            Console.WriteLine(input[i] * input[j] * input[k]);
+                        }
+                    }
+                }
+            }
         }
     }
 }
