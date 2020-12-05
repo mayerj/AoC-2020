@@ -11,6 +11,7 @@ namespace AoC
         {
             SelfTest();
             Part1();
+            Part2();
         }
 
         private static void SelfTest()
@@ -70,6 +71,26 @@ namespace AoC
         private static void Part1()
         {
             System.Console.WriteLine(Input.Data.Select(Decode).Max(x => x.seatId));
+        }
+
+        private static void Part2()
+        {
+            var passes = Input.Data.Select(Decode).ToDictionary(x => x.seatId);
+
+            for (int i = passes.Keys.Min(); i < passes.Keys.Max(); i++)
+            {
+                if (passes.TryGetValue(i, out _))
+                {
+                    continue;
+                }
+
+                if (!passes.TryGetValue(i - 1, out _) || !passes.TryGetValue(i + 1, out _))
+                {
+                    continue;
+                }
+
+                System.Console.WriteLine(i);
+            }
         }
     }
 }
