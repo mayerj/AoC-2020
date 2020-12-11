@@ -40,6 +40,61 @@ namespace AoC
             return totalParents.Count;
         }
 
+        public static int GetContainingBags(Dictionary<string, Bag> bags, string given)
+        {
+            Dictionary<string, int> counts = GetCounts(bags);
+
+            if (!counts.TryGetValue(given, out var value))
+            {
+                return 0;
+            }
+
+            return value;
+        }
+
+        private static Dictionary<string, int> GetCounts(Dictionary<string, Bag> bags)
+        {
+            Queue<Bag> toProcess = new Queue<Bag>(bags.Values);
+
+            Dictionary<string, int> result = new();
+            while (toProcess.Count != 0)
+            {
+                Bag current = toProcess.Dequeue();
+
+                if (!TryGetCount(result, current, out int count))
+                {
+                    toProcess.Enqueue(current);
+                }
+                else
+                {
+                    result[current.BagColor] = count;
+                }
+            }
+
+            return result;
+        }
+
+        private static bool TryGetCount(Dictionary<string, int> result, Bag current, out int count)
+        {
+            if (result.TryGetValue(current.BagColor, out count))
+            {
+                return true;
+            }
+
+            count = 0;
+            foreach (var kvp in current.ContainsCount)
+            {
+                if (!result.TryGetValue(kvp.Key, out int subbags))
+                {
+                    return false;
+                }
+
+                count += kvp.Value + (subbags * kvp.Value);
+            }
+
+            return true;
+        }
+
         private static HashSet<string> GetParentBags(Dictionary<string, Bag> bags, string given)
         {
             return bags.Values.Where(x => x.ContainsCount.ContainsKey(given)).Select(x => x.BagColor).ToHashSet();
